@@ -1,0 +1,87 @@
+logging:
+  level:
+    io.github.resilience4j: DEBUG
+    org.springframework.cloud: DEBUG
+server:
+  port: 8000
+  netty:
+    connection-timeout: 2s
+    idle-timeout: 15s
+  shutdown: graceful
+  
+spring:
+  application:
+    name: api-gateway
+  lifecycle:
+    timeout-per-shutdown-phase: 15s
+
+  cloud:
+    gateway:
+      routes:
+        - id: invoice-route
+          uri: ${INVOICE_SERVICE_URI:http://localhost:8080}/invoices
+          predicates:
+            - Path=/invoices/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: invoiceCircuitBreaker
+                fallbackUri: forward:/invoice-fallback
+        - id: payment-route
+          uri: ${PAYMENT_SERVICE_URI:http://localhost:8081}/payments
+          predicates:
+            - Path=/payments/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: paymentCircuitBreaker
+      httpclient:
+        connect-timeout: 2000
+        response-timeout: 5s
+        pool:
+          type: elastic #other options: fixed, disabled
+          max-idle-time: 15s
+          max-life-time: 60s
+      default-filters:
+        - name: Retry
+          args:
+            retries: 3
+            methods: GET
+            series: SERVER_ERROR
+            exceptions: java.io.IOException, java.util.concurrent.TimeoutException
+            backoff:
+              firstBackoff: 50ms
+              maxBackoff: 500ms
+              factor: 2
+              basedOnPreviousValue: false
+#        - name: RequestRateLimiter
+#          args:
+#            redis-rate-limiter:
+#              replenishRate: 10 # 10 tokens/sec are added to the bucket
+#              burstCapacity: 20 # maximum burst of requests allowed
+#              requestedTokens: 1 # 1 token per request is consumed from the bucket
+#        - name: SaveSession # will save session in redis
+  
+#  redis:
+#    host: localhost
+#    port: 6379
+#    connect-timeout: 2s
+#    timeout: 1s
+#  session:
+#    store-type: redis # none to disable
+#    timeout: 10m
+#    redis:
+#      namespace: invoice-api-gateway
+            
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 20
+        permittedNumberOfCallsInHalfOpenState: 5
+        failureRateThreshold: 50 # 50%
+        waitDurationInOpenState: 15000 #in ms before moving to half-open from open state
+  timelimiter: #request timeout
+    configs:
+      default:
+        timeoutDuration: 5s

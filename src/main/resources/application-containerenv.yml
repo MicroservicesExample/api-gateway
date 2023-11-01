@@ -1,0 +1,21 @@
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter:
+              replenishRate: 10 # 10 tokens/sec are added to the bucket
+              burstCapacity: 20 # maximum burst of requests allowed
+              requestedTokens: 1 # 1 token per request is consumed from the bucket
+        - name: SaveSession # will save session in redis
+  redis:
+    host: localhost
+    port: 6379
+    connect-timeout: 2s
+    timeout: 1s
+  session:
+    store-type: redis # none to disable
+    timeout: 10m
+    redis:
+      namespace: invoice-api-gateway
