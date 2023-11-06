@@ -3,7 +3,7 @@
 #    io.github.resilience4j: DEBUG
 #    org.springframework.cloud: DEBUG
 server:
-  port: 8000
+  port: 8080
   netty:
     connection-timeout: 2s
     idle-timeout: 15s
@@ -11,7 +11,7 @@ server:
   
 spring:
   application:
-    name: api-gateway
+    name: app-service
   lifecycle:
     timeout-per-shutdown-phase: 15s
   config:
@@ -27,11 +27,24 @@ spring:
         initial-interval: 1000
         max-interval: 2000
         multiplier: 1.1
-
+  security:
+    oauth2:
+      client:
+        provider:
+          myAuthServer:
+            issuer-uri: http://localhost:9000
+        registration:
+          myAuthServer:
+            client-id: ${app.authentication.client-id}
+            client-secret: ${app.authentication.client-secret}
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_basic
+            redirect-uri: "{baseUrl}/login/oauth2/code/myAuthServer"
+            scope: openid
     gateway:
       routes:
         - id: invoice-route
-          uri: ${INVOICE_SERVICE_URI:http://localhost:8080}/invoices
+          uri: ${INVOICE_SERVICE_URI:http://localhost:8081}/invoices
           predicates:
             - Path=/invoices/**
           filters:
@@ -40,7 +53,7 @@ spring:
                 name: invoiceCircuitBreaker
                 fallbackUri: forward:/invoice-fallback
         - id: payment-route
-          uri: ${PAYMENT_SERVICE_URI:http://localhost:8081}/payments
+          uri: ${PAYMENT_SERVICE_URI:http://localhost:8082}/payments
           predicates:
             - Path=/payments/**
           filters:
@@ -84,3 +97,7 @@ resilience4j:
     configs:
       default:
         timeoutDuration: 5s
+app:
+  authentication:
+    client-id: app-service
+    client-secret: mysecret123

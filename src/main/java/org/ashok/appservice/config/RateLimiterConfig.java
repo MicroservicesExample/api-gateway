@@ -1,10 +1,10 @@
-package org.ashok.apigateway.config;
+package org.ashok.appservice.config;
+
+import java.security.Principal;
 
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import reactor.core.publisher.Mono;
 
 @Configuration
 public class RateLimiterConfig {
@@ -13,7 +13,12 @@ public class RateLimiterConfig {
 	@Bean
 	public KeyResolver keyResolver() {
 	
-		return exchange -> Mono.just("allusers"); //rate limiting across all the users
+		return exchange -> {
+			
+			return exchange.getPrincipal()
+					.map(Principal::getName) // logged in user
+					.defaultIfEmpty("anonymous"); //rate limiting across all the users
+		};
 	}
 
 }

@@ -1,4 +1,4 @@
-package org.ashok.apigateway.web;
+package org.ashok.appservice.web;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
