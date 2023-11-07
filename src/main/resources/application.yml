@@ -32,14 +32,14 @@ spring:
       client:
         provider:
           myauth:
-            issuer-uri: http://localhost:9000
+            issuer-uri: "${OAUTH2_SERVICE_ISSUER-URI:http://localhost:9000}"
         registration:
           myauth:
             client-id: ${app.authentication.client-id}
             client-secret: ${app.authentication.client-secret}
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_basic
-            redirect-uri: "{baseUrl}/login/oauth2/code/myauth"
+            redirect-uri: "${OAUTH2_LOGIN_REDIRECT-URI:{baseUrl}/login/oauth2/code/myauth}"
             scope: openid
     gateway:
       routes:
