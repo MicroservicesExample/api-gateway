@@ -1,12 +1,13 @@
 package org.ashok.appservice.user;
 
+import java.util.stream.Collectors;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import reactor.core.publisher.Mono;
-import java.util.List;
 
 @RestController
 public class UserController {
@@ -17,7 +18,12 @@ public class UserController {
 						oidcUser.getPreferredUsername(),
 						oidcUser.getGivenName(),
 						oidcUser.getFamilyName(),
-						List.of("ADMIN", "USER"));	
+						oidcUser.getAuthorities()
+									.stream()
+									.map(authority -> authority.getAuthority())
+									.collect(Collectors.toList())
+						);
+							
 						
 		return Mono.just(user);
 	}

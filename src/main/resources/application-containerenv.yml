@@ -9,6 +9,7 @@ spring:
               burstCapacity: 20 # maximum burst of requests allowed
               requestedTokens: 1 # 1 token per request is consumed from the bucket
         - name: SaveSession # will save session in redis
+        - name: TokenRelay #This filter will add authorization header into the request -> GET /invoices Authorization: Bearer <access_token>
   redis:
     host: localhost
     port: 6379
