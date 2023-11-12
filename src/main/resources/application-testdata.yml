@@ -1,0 +1,5 @@
+#disable redis autoconfiguration in local env as redis is not available
+spring.autoconfigure:
+  exclude:
+    - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+    - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration

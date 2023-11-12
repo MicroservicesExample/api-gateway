@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apigateway-service
+  name: app-service
   labels:
-    app: apigateway-service
+    app: app-service
 spec:
   replicas: 1
   selector:
     matchLabels: 
-      app: apigateway-service
+      app: app-service
   template:
     metadata:
       labels:
-        app: apigateway-service
+        app: app-service
     spec:
       containers:
-        - name: apigateway-service
-          image: apigateway-service:1.0
+        - name: app-service
+          image: app-service:1.0
           imagePullPolicy: IfNotPresent
           #Makes Kubernetes wait 5 seconds before sending the SIGTERM signal to the Pod by that Kubernetes will update its components to not to send new requests to the pod.( sleep is to avoid race condition)
           lifecycle:
@@ -24,7 +24,7 @@ spec:
               exec:
                 command: [ "sh", "-c", "sleep 5"]
           ports:
-            - containerPort: 8081
+            - containerPort: 8080
           env:
             - name: BPL_JVM_THREAD_COUNT
               value: "50"
