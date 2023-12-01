@@ -10,11 +10,12 @@ spring:
               requestedTokens: 1 # 1 token per request is consumed from the bucket
         - name: SaveSession # will save session in redis
         - name: TokenRelay #This filter will add authorization header into the request -> GET /invoices Authorization: Bearer <access_token>
-  redis:
-    host: localhost
-    port: 6379
-    connect-timeout: 2s
-    timeout: 1s
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      connect-timeout: 2s
+      timeout: 1s
   session:
     store-type: redis # none to disable
     timeout: 10m
