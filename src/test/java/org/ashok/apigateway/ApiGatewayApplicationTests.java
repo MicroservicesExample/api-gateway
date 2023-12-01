@@ -13,7 +13,7 @@ import org.testcontainers.utility.DockerImageName;
 
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes=ApiGatewayApplicationTests.class)
 @EnabledIfSystemProperty(named = "spring.profiles.active", matches = ".*containerenv.*")
 @Testcontainers
 @ActiveProfiles("containerenv")
