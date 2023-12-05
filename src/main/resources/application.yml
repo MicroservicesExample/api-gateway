@@ -14,19 +14,6 @@ spring:
     name: app-service
   lifecycle:
     timeout-per-shutdown-phase: 15s
-  config:
-    import: "optional:configserver:"
-  cloud:
-    config:
-      uri: "http://localhost:9001"
-      request-connect-timeout: 5000
-      request-read-timeout: 5000
-      fail-fast: false
-      retry:
-        max-attempts: 5
-        initial-interval: 1000
-        max-interval: 2000
-        multiplier: 1.1
   security:
     oauth2:
       client:
@@ -41,6 +28,19 @@ spring:
             client-authentication-method: client_secret_basic
             redirect-uri: "${OAUTH2_LOGIN_REDIRECT-URI:{baseUrl}/login/oauth2/code/myauth}"
             scope: openid
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: "http://localhost:9001"
+      request-connect-timeout: 5000
+      request-read-timeout: 5000
+      fail-fast: false
+      retry:
+        max-attempts: 5
+        initial-interval: 1000
+        max-interval: 2000
+        multiplier: 1.1
     gateway:
       routes:
         - id: invoice-route
@@ -79,6 +79,7 @@ spring:
               maxBackoff: 500ms
               factor: 2
               basedOnPreviousValue: false
+        - name: TokenRelay #This filter will add authorization header into the request -> GET /invoices Authorization: Bearer <access_token>
 
 #enable refresh end point of the actuator, exposes http /actuator/refresh end point
 management:
@@ -100,4 +101,4 @@ resilience4j:
 app:
   authentication:
     client-id: app-service
-    client-secret: mysecret123
+    client-secret: secret
