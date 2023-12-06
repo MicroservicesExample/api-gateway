@@ -15,7 +15,7 @@ public class UserController {
 	@GetMapping("user")
 	Mono<User> getUser(@AuthenticationPrincipal OidcUser oidcUser){
 		User user =  new User(
-						(String)oidcUser.getAttributes().get("sub"),
+						(String)oidcUser.getPreferredUsername(),
 						oidcUser.getGivenName(),
 						oidcUser.getFamilyName(),
 						oidcUser.getAuthorities()
