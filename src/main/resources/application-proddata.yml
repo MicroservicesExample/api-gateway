@@ -8,7 +8,20 @@ spring:
               replenishRate: 10 # 10 tokens/sec are added to the bucket
               burstCapacity: 20 # maximum burst of requests allowed
               requestedTokens: 1 # 1 token per request is consumed from the bucket
-        - name: SaveSession # will save session in redis        
+        - name: SaveSession # will save session in redis
+        - name: TokenRelay #This filter will add authorization header into the request -> GET /invoices Authorization: Bearer <access_token>
+        - name: Retry
+          args:
+            retries: 3
+            methods: GET
+            series: SERVER_ERROR
+            exceptions: java.io.IOException, java.util.concurrent.TimeoutException
+            backoff:
+              firstBackoff: 50ms
+              maxBackoff: 500ms
+              factor: 2
+              basedOnPreviousValue: false
+                
   data:
     redis:
       host: localhost

@@ -14,9 +14,7 @@ import org.testcontainers.utility.DockerImageName;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes=ApiGatewayApplicationTests.class)
-@EnabledIfSystemProperty(named = "spring.profiles.active", matches = ".*containerenv.*")
 @Testcontainers
-@ActiveProfiles("containerenv")
 class ApiGatewayApplicationTests {
 
 	private static final int REDIS_PORT= 6379;
