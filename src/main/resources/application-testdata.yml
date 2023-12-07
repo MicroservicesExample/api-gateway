@@ -3,3 +3,8 @@ spring.autoconfigure:
   exclude:
     - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
     - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - name: TokenRelay #This filter will add authorization header into the request -> GET /invoices Authorization: Bearer <access_token>
