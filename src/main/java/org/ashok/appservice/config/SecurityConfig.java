@@ -18,6 +18,7 @@ public class SecurityConfig {
 	SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity,
 			ReactiveClientRegistrationRepository clientRegistrationRepository ) {
 		return httpSecurity
+				.csrf(Customizer.withDefaults())
 				.authorizeExchange(exchange -> 
 					exchange.anyExchange().authenticated())
 				.oauth2Login(Customizer.withDefaults())
