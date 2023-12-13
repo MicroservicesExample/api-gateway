@@ -28,11 +28,27 @@ spec:
           env:
             - name: BPL_JVM_THREAD_COUNT
               value: "50"
-            - name: SPRING_CLOUD_CONFIG_URI
-              value: http://config-service:9001
-            - name: SPRING_REDIS_HOST
-              value: redis
-            - name: SPRING_REDIS_PORT
+            
+            - name: SPRING_DATA_REDIS_HOST
+              value: my-redis
+            
+            - name: SPRING_DATA_REDIS_PORT
               value: "6379"
+            
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-service
+            
+            - name: OAUTH2_SERVICE_ISSUER-URI
+              value: http://auth-service
+            
+            - name: INVOICE_SERVICE_URI
+              value: http://invoice-service
+            
+            - name: PAYMENT_SERVICE_URI
+              value: http://payment-service
+            
             - name: SPRING_PROFILES_ACTIVE
-              value: containerenv
+              value: proddata
+
+            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK
+              value: debug
